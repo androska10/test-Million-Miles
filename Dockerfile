@@ -1,24 +1,19 @@
-# Dockerfile для Railway (Laravel + Nginx + PHP-FPM)
+# Dockerfile
+FROM php:8.2-cli
 
-FROM php:8.2-fpm
-
-# Установка системных зависимостей
+# Установка зависимостей
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
     libonig-dev \
-    libzip-dev \
+    libxml2-dev \
+    zip \
     unzip \
-    nginx \
-    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка PHP-расширений
-RUN docker-php-ext-configure gd --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli zip opcache bcmath
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -26,25 +21,21 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Копируем проект
 COPY . .
 
-# Устанавливаем зависимости (без dev)
+# Устанавливаем зависимости
 RUN composer install --optimize-autoloader --no-dev
 
 # Создаём .env из .env.example
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# Генерируем ключ Laravel
+# Генерируем ключ
 RUN php artisan key:generate
 
-# Подготавливаем папки
+# Даём права на storage
 RUN mkdir -p storage/logs storage/framework/{cache,sessions,views}
 RUN chmod -R 775 storage bootstrap/cache
 
-# Копируем конфиги
-COPY nginx.conf /etc/nginx/sites-available/default
-COPY supervisor.conf /etc/supervisor/conf.d/laravel.conf
+# Экспонируем порт (для ясности, но Railway сам задаст $PORT)
+EXPOSE 8000
 
-# Порт
-EXPOSE 80
-
-# Запуск
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Запускаем Laravel Development Server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
