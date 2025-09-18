@@ -29,6 +29,9 @@ COPY . .
 # Устанавливаем зависимости (без dev)
 RUN composer install --optimize-autoloader --no-dev
 
+# Создаём .env, если его нет
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
+
 # Генерируем ключ Laravel
 RUN php artisan key:generate
 
