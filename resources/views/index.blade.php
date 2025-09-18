@@ -9,9 +9,9 @@
 
 <body>
     @if (empty($cars_list))
-
-    @else
     <h1>No cars found. Try adjusting your search or check back later! :)</h1>
+    @else
+
     @endif
 </body>
 
