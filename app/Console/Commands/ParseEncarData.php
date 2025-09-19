@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\ParsingService;
+use Illuminate\Support\Facades\Log;
 
 class ParseEncarData extends Command
 {
@@ -26,13 +27,13 @@ class ParseEncarData extends Command
      */
     public function handle(ParsingService $parser)
     {
-        $this->info('🚀 Starting ENCAR data parsing...');
+        Log::info('🚀 Starting ENCAR data parsing...'); 
 
         try {
-            $saved = $parser->parseAll(5); // 5 страниц
-            $this->info("✅ Successfully saved {$saved} cars.");
+            $saved = $parser->parseAll(5);
+            Log::info("✅ Successfully saved {$saved} cars."); 
         } catch (\Exception $e) {
-            $this->error('❌ Error: ' . $e->getMessage());
+            Log::error('❌ Error: ' . $e->getMessage()); 
             return 1;
         }
     }
