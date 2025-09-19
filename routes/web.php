@@ -27,26 +27,23 @@ Route::get('/schedule-run', function () {
     ]);
 })->name('schedule.run');
 
-Route::get('/logs', function () {
-    // Защита: только с правильным ключом
+Route::get('/logs-schedule', function () {
     if (request()->get('key') !== env('LOGS_SECRET', 'your-secret-here')) {
         abort(403, 'Access denied');
     }
 
-    $logPath = storage_path('logs/laravel.log');
+    $logPath = storage_path('logs/schedule-encar.log');
 
     if (!File::exists($logPath)) {
         return response()->json([
-            'error' => 'Log file not found',
+            'error' => 'Schedule log file not found. Run schedule once first.',
         ], 404);
     }
 
-    // Читаем файл и берем последние 50 строк
     $lines = File::lines($logPath)->toArray();
-    $lastLines = array_slice($lines, -50);
+    $lastLines = array_slice($lines, -100); // последние 100 строк
 
-    // Опционально: вернуть как текст с переносами
     return Response::make(implode("\n", $lastLines), 200, [
         'Content-Type' => 'text/plain; charset=UTF-8',
     ]);
-})->name('logs.view');
+})->name('logs.schedule');
