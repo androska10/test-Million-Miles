@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('encar:parse')->everyMinutes();
+        $schedule->command('encar:parse')->everyMinute();
     }
 
     /**
