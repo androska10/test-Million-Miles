@@ -30,7 +30,7 @@ class ParseEncarData extends Command
         Log::info('🚀 Starting ENCAR data parsing...'); 
 
         try {
-            $saved = $parser->parseAll(5);
+            $saved = $parser->parseAll();
             Log::info("✅ Successfully saved {$saved} cars."); 
         } catch (\Exception $e) {
             Log::error('❌ Error: ' . $e->getMessage()); 

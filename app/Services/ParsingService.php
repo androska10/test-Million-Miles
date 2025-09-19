@@ -5,7 +5,6 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Car;
-use PHPUnit\Event\Code\Throwable;
 
 class ParsingService {
 
@@ -38,6 +37,10 @@ class ParsingService {
 
             
             $cars = $data['SearchResults'] ?? [];
+
+            if (empty($cars)) {
+                Log::info("No cars found on page {$page}, stopping.");
+            }
 
             Log::info("Fetched " . count($cars) . " cars from page {$page} (start: {$start})");
 

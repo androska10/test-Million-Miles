@@ -8,4 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('encar:parse')->everyMinute();
+Schedule::command('encar:parse')
+    ->everyMinute()
+    ->appendOutputTo(storage_path('logs/schedule-encar.log'));
