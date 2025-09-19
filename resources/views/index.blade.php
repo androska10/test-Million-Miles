@@ -11,7 +11,10 @@
     @if (empty($cars_list))
     <h1>No cars found. Try adjusting your search or check back later! :)</h1>
     @else
-
+    @foreach ($cars as $car)
+    {{ $car->brand }}>{{ $car->price }}
+    <br>
+    @endforeach
     @endif
 </body>
 

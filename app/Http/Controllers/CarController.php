@@ -10,8 +10,8 @@ class CarController extends Controller
 {
     public function index(Request $request): View
     {
-        
+        $cars = Car::latest(10);        
 
-        return view('index');
+        return view('index', compact('cars'));
     }
 }
