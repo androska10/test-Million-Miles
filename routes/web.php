@@ -3,22 +3,24 @@
 use App\Http\Controllers\CarController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', [CarController::class, 'index'])->name('home');
 
-Route::get('/schedule-run', function () {
-    // Защита: только с правильным секретным ключом
-    if (request()->get('key') !== env('CRON_SECRET')) {
+Route::post('/schedule-run', function () {
+    if (request()->get('key') !== 'kj8Fg3mPq9XzL2wR') {
         abort(403, 'Access denied');
     }
 
-    // Запускаем Laravel Scheduler
-    Artisan::call('schedule:run');
+    $exitCode = Artisan::call('schedule:run');
+    $output = Artisan::output();
 
-    // Возвращаем ответ для логов
+    Log::info('Schedule run executed', compact('exitCode', 'output'));
+
     return response()->json([
-        'status' => 'success',
+        'status' => $exitCode === 0 ? 'success' : 'failure',
         'time' => now(),
-        'output' => Artisan::output(),
+        'output' => $output,
+        'exit_code' => $exitCode,
     ]);
 })->name('schedule.run');

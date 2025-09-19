@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Car;
+use PHPUnit\Event\Code\Throwable;
 
 class ParsingService {
 
@@ -85,6 +86,8 @@ class ParsingService {
 
     public function parseAll (int $maxPage = 5): int 
     {
+        Log::info('Start parsing fun!');
+
         $totalSaved = 0;
 
         for ($page = 1; $page <= $maxPage; $page++) {
