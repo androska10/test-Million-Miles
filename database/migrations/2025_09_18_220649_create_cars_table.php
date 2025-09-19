@@ -13,14 +13,12 @@ return new class extends Migration
     {   //марка, модель, год, пробег, цена, фото;
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('brand');           // Manufacturer
-            $table->string('model');           // Model + Badge + BadgeDetail
-            $table->integer('year')->nullable(); 
-            $table->integer('mileage')->default(0); 
-            $table->bigInteger('price')->default(0); // Price (в вонах)
-            $table->string('image_url')->nullable(); // первое фото из Photos
-            $table->string('external_id')->unique(); 
-            $table->json('data')->nullable();
+            $table->string('manufacturer');
+            $table->string('model');
+            $table->unsignedSmallInteger('year');
+            $table->unsignedInteger('mileage');
+            $table->unsignedBigInteger('price');
+            $table->string('photo_url');
             $table->timestamps();
         });
     }
