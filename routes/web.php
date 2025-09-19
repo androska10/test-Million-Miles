@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 Route::get('/', [CarController::class, 'index'])->name('home');
 
-Route::post('/schedule-run', function () {
+Route::get('/schedule-run', function () {
     if (request()->get('key') !== 'kj8Fg3mPq9XzL2wR') {
         abort(403, 'Access denied');
     }
